@@ -18,13 +18,7 @@ class RegisterProductScreen extends StatelessWidget {
             initialValue: [],
           ),
           TextFormField(
-            decoration: InputDecoration(
-                labelText: 'Título *',
-                labelStyle: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: Colors.grey,
-                    fontSize: 18),
-                contentPadding: const EdgeInsets.fromLTRB(16, 10, 12, 10)),
+            decoration: inputDecoration('Título'),
             validator: (text) {
               if (text.isEmpty) return 'Campo Obrigatório';
               return null;
@@ -33,28 +27,14 @@ class RegisterProductScreen extends StatelessWidget {
           ),
           TextFormField(
             maxLines: null,
-            decoration: InputDecoration(
-                labelText: 'Descrição *',
-                labelStyle: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: Colors.grey,
-                    fontSize: 18),
-                contentPadding: const EdgeInsets.fromLTRB(16, 10, 12, 10)),
+            decoration: inputDecoration('Descrição'),
             validator: (text) {
               return null;
             },
             onSaved: (t) {},
           ),
           TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Preço *',
-              labelStyle: TextStyle(
-                fontWeight: FontWeight.w800,
-                color: Colors.grey,
-                fontSize: 18,
-              ),
-              contentPadding: const EdgeInsets.fromLTRB(16, 10, 12, 10),
-            ),
+            decoration: inputDecoration('Preço'),
             keyboardType: const TextInputType.numberWithOptions(
                 decimal: true, signed: false),
             inputFormatters: [
@@ -72,6 +52,14 @@ class RegisterProductScreen extends StatelessWidget {
         ],
       ),
     ));
+  }
+
+  inputDecoration(String title) {
+    return InputDecoration(
+        labelText: '$title *',
+        labelStyle: TextStyle(
+            fontWeight: FontWeight.w800, color: Colors.grey, fontSize: 18),
+        contentPadding: const EdgeInsets.fromLTRB(16, 10, 12, 10));
   }
 
   saveButton() {
