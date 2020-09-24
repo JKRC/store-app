@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:store_app/blocs/create_bloc.dart';
 import 'package:store_app/models/product.dart';
 import 'package:store_app/screens/register_product/widgets/images_field.dart';
 
@@ -9,8 +12,8 @@ class RegisterProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     Product product = Product();
+    CreateBloc _createBloc = CreateBloc();
 
     return Container(
         child: Form(
@@ -18,7 +21,7 @@ class RegisterProductScreen extends StatelessWidget {
       child: ListView(
         children: [
           ImagesField(
-            onSaved: (images) {
+            onSaved: (List<File> images) {
               product.images = images;
             },
             initialValue: [],
@@ -53,21 +56,19 @@ class RegisterProductScreen extends StatelessWidget {
             ],
             validator: (text) {
               if (text.trim().isEmpty) return 'Campo obrigatório';
-              if (double.tryParse(text) == null)
-                return 'Utilize valores válidos';
               return null;
             },
-            onSaved: (price){
-              product.price = int.parse(getSanitizedText(price)) /100;
+            onSaved: (price) {
+              product.price = int.parse(getSanitizedText(price)) / 100;
             },
           ),
-          saveButton()
+          saveButton(_createBloc, product)
         ],
       ),
     ));
   }
 
-  String getSanitizedText(String text){
+  String getSanitizedText(String text) {
     return text.replaceAll(RegExp(r'[^\d]'), '');
   }
 
@@ -79,7 +80,7 @@ class RegisterProductScreen extends StatelessWidget {
         contentPadding: const EdgeInsets.fromLTRB(16, 10, 12, 10));
   }
 
-  saveButton() {
+  saveButton(CreateBloc _createBloc, Product product) {
     return Container(
       height: 50,
       child: RaisedButton(
@@ -89,9 +90,14 @@ class RegisterProductScreen extends StatelessWidget {
           style: TextStyle(
               color: Colors.white, fontSize: 18, fontWeight: FontWeight.w500),
         ),
-        onPressed: () {
+        onPressed: () async {
           if (_formKey.currentState.validate()) {
             _formKey.currentState.save();
+            final bool success = await _createBloc.saveProduct(product);
+
+            if (success) {
+              //save succesfully!
+            }
           }
         },
       ),

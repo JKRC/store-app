@@ -1,13 +1,17 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:image/image.Dart' as Im;
+import 'Dart:math' as Math;
 import 'image_source_sheet.dart';
 
 class ImagesField extends StatelessWidget {
 
   ImagesField({this.onSaved, this.initialValue});
 
-  final FormFieldSetter<List> onSaved;
-  final List initialValue;
+  final FormFieldSetter<List<File>> onSaved;
+  final List<File> initialValue;
 
   final Function validateImages = (List images){
     if (images.isEmpty) return 'Campo obrigatório';
@@ -16,7 +20,7 @@ class ImagesField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FormField<List>(
+    return FormField<List<File>>(
       validator: validateImages,
       initialValue: initialValue,
       onSaved: onSaved,
@@ -60,11 +64,27 @@ class ImagesField extends StatelessWidget {
     );
   }
 
+  Future<File> compressImage(File imgFile) async{
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+    int rand = new Math.Random().nextInt(10000);
+
+    Im.Image image = Im.decodeImage(imgFile.readAsBytesSync());
+    Im.Image smallerImage = Im.copyResize(image,
+        width: 500); // choose the size here, it will maintain aspect ratio
+
+    return new File('$path/img_$rand.jpg')
+      ..writeAsBytesSync(Im.encodeJpg(smallerImage, quality: 85));
+  }
+
   modalBottomSheet(state, context) {
     return showModalBottomSheet(
         context: context,
-        builder: (context) => ImageSourceSheet((image) {
-              if (image != null) state.didChange(state.value..add(image));
+        builder: (context) => ImageSourceSheet((image) async{
+              if (image != null) {
+                image = await compressImage(image);
+                state.didChange(state.value..add(image));
+              }
               Navigator.of(context).pop();
             }));
   }
