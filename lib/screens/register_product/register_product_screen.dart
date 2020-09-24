@@ -1,6 +1,7 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:store_app/models/product.dart';
 import 'package:store_app/screens/register_product/widgets/images_field.dart';
 
 class RegisterProductScreen extends StatelessWidget {
@@ -8,13 +9,18 @@ class RegisterProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Product product = Product();
+
     return Container(
         child: Form(
       key: _formKey,
       child: ListView(
         children: [
           ImagesField(
-            onSaved: (images) {},
+            onSaved: (images) {
+              product.images = images;
+            },
             initialValue: [],
           ),
           TextFormField(
@@ -23,7 +29,9 @@ class RegisterProductScreen extends StatelessWidget {
               if (text.isEmpty) return 'Campo Obrigatório';
               return null;
             },
-            onSaved: (t) {},
+            onSaved: (t) {
+              product.title = t;
+            },
           ),
           TextFormField(
             maxLines: null,
@@ -31,7 +39,9 @@ class RegisterProductScreen extends StatelessWidget {
             validator: (text) {
               return null;
             },
-            onSaved: (t) {},
+            onSaved: (t) {
+              product.description = t;
+            },
           ),
           TextFormField(
             decoration: inputDecoration('Preço'),
@@ -47,11 +57,18 @@ class RegisterProductScreen extends StatelessWidget {
                 return 'Utilize valores válidos';
               return null;
             },
+            onSaved: (price){
+              product.price = int.parse(getSanitizedText(price)) /100;
+            },
           ),
           saveButton()
         ],
       ),
     ));
+  }
+
+  String getSanitizedText(String text){
+    return text.replaceAll(RegExp(r'[^\d]'), '');
   }
 
   inputDecoration(String title) {
