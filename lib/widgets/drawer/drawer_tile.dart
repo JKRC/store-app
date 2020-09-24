@@ -12,7 +12,6 @@ class DrawerTile extends StatelessWidget {
     final drawerBloc = BlocProvider.of<DrawerBloc>(context);
     return ListTile(
       onTap: (){
-        print('ok');
         drawerBloc.sinkIndexDrawer.add(clickedIndex);
         Navigator.of(context).pop();
       },
