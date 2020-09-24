@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'file:///C:/Users/Johnk/AndroidStudioProjects/store_app/lib/widgets/drawer/drawer_tile.dart';
+import 'drawer_tile.dart';
+
 
 class CustomDrawer extends StatelessWidget {
-
-  final Function drawerOptionsIndex;
-  CustomDrawer(this.drawerOptionsIndex);
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +22,8 @@ class CustomDrawer extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               child: Column(
                 children: [
-                  DrawerTile(this.drawerOptionsIndex, 0),
-                  DrawerTile(this.drawerOptionsIndex, 1)
+                  DrawerTile(0),
+                  DrawerTile(1)
                 ],
               ),
             )

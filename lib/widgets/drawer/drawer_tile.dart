@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store_app/blocs/drawer_bloc.dart';
 
 class DrawerTile extends StatelessWidget {
 
-  final Function drawerOptionsIndex;
   final int clickedIndex;
 
-  DrawerTile(this.drawerOptionsIndex, this.clickedIndex);
+  DrawerTile(this.clickedIndex);
   @override
   Widget build(BuildContext context) {
+    final drawerBloc = BlocProvider.of<DrawerBloc>(context);
     return ListTile(
       onTap: (){
-        this.drawerOptionsIndex(this.clickedIndex);
+        print('ok');
+        drawerBloc.sinkIndexDrawer.add(clickedIndex);
+        Navigator.of(context).pop();
       },
       leading: Icon(Icons.shopping_cart),
       title: Text(

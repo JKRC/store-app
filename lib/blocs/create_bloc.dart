@@ -11,7 +11,6 @@ class CreateBloc {
       StreamController<CreateState>();
 
   Stream<CreateState> get outState => _stateController.stream;
-
   StreamSink<CreateState> get sinkState => _stateController.sink;
 
   Future<bool> saveProduct(Product product) async {

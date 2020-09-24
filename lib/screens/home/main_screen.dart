@@ -1,34 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store_app/blocs/drawer_bloc.dart';
 import 'package:store_app/screens/products/products_screen.dart';
 import 'package:store_app/screens/register_product/register_product_screen.dart';
-import 'file:///C:/Users/Johnk/AndroidStudioProjects/store_app/lib/widgets/drawer/custom_drawer.dart';
+import 'package:store_app/widgets/drawer/custom_drawer.dart';
 
 class HomeScreen extends StatefulWidget {
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _index = 0;
   final List screens = [ProductsScreen(), RegisterProductScreen()];
 
   @override
   Widget build(BuildContext context) {
 
-    void drawerOptionsIndex(int index) {
-      Navigator.pop(context);
-      setState(() {
-        _index = index;
-      });
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-          title: Text('Store'),
-      ),
-      drawer: CustomDrawer(drawerOptionsIndex),
-      body: screens[_index],
-    );
+    return BlocProvider(
+        create: (BuildContext context) => DrawerBloc(),
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text('Store'),
+          ),
+          drawer: CustomDrawer(),
+          body: Builder(
+            builder: (context){
+              final drawerBloc = BlocProvider.of<DrawerBloc>(context);
+              return StreamBuilder<int>(
+                initialData: 0,
+                stream: drawerBloc.outIndexDrawer,
+                builder: (context, snapshot){
+                  return screens[snapshot.data];
+                },
+              );
+            },
+          ),
+        ));
   }
 }
